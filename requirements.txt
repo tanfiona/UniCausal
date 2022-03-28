@@ -1,0 +1,7 @@
+numpy
+pandas
+torch
+transformers
+accelerate
+huggingface_hub
+
