@@ -14,7 +14,7 @@ from collections import Counter
 from datasets import ClassLabel, load_metric, load_dataset
 from _datasets.unifiedcre import load_cre_dataset, available_datasets
 from _datasets.data_collator import DataCollatorForTokenClassification
-from torch.utils.data import DataLoader, WeightedRandomSampler
+from torch.utils.data import DataLoader, WeightedRandomSampler, RandomSampler
 from tqdm.auto import tqdm
 
 import transformers
@@ -367,62 +367,20 @@ def main():
     if args.seq_val_file is not None and (args.do_eval or args.do_predict):
         seq_files["validation"] = args.seq_val_file
 
-    if args.dataset_name is not None:
-        # Loading dataset from a predefined list and format.
-        span_datasets, seq_datasets, stats = load_cre_dataset(
-            args.dataset_name, args.do_train_val, 
-            span_augment=args.span_augment,
-            span_files=span_files, 
-            seq_files=seq_files,
-            do_train=args.do_train)
-        min_batch_size, pspan, apair, aseq = stats
-        logger.info(f"Minimum batch size needed: {min_batch_size} ;   pspan:apair:aseq ratio {pspan}:{apair}:{aseq}")
-        if args.ratio is not None:
-            pspan, apair, aseq = args.ratio
-            pspan, apair, aseq = int(pspan), int(apair), int(aseq)
-            min_batch_size = apair + aseq + pspan
-            logger.info(f"OVERWRITE Minimum batch size needed: {min_batch_size} ;   pspan:apair:aseq ratio {pspan}:{apair}:{aseq}")
-    else:
-        # These do not work given current changes
-        raise NotImplementedError
-        # data_files = {}
-        # if args.span_train_file is not None and args.do_train_val:
-        #     data_files["train"] = args.span_train_file
-        #     extension = args.span_train_file.split(".")[-1]
-        # if args.span_val_file is not None:
-        #     data_files["validation"] = args.span_val_file
-        #     extension = args.span_val_file.split(".")[-1]
-        # span_datasets = load_dataset(extension,data_files=data_files)
-
-        # data_files = {}
-        # if args.seq_train_file is not None and args.do_train_val:
-        #     data_files["train"] = args.seq_train_file
-        #     extension = args.seq_train_file.split(".")[-1]
-        # if args.seq_val_file is not None:
-        #     data_files["validation"] = args.seq_val_file
-        #     extension = args.seq_val_file.split(".")[-1]
-        # seq_datasets = load_dataset(extension,data_files=data_files)
-    
-        # # Segment the datasets
-        # if args.span_train_file is not None and args.seq_train_file is not None and args.do_train_val:
-        #     # positive_spans == span_train
-        #     posi_spans_ids = span_datasets["train"]["id"]
-        #     neg_seqs_ids, posi_seqs_ids = [], []
-        #     for ix, d in enumerate(seq_datasets["train"]):
-        #         if int(d["label"])==0:
-        #             neg_seqs_ids.append(ix)
-        #         elif d["index"] in posi_spans_ids:
-        #             posi_seqs_ids.append(ix)
-            
-        #     lowest_denom = min(len(posi_spans_ids), len(neg_seqs_ids), len(posi_seqs_ids))
-        #     pspan = int(len(posi_spans_ids)/lowest_denom)
-        #     pseq = int(len(posi_seqs_ids)/lowest_denom)
-        #     nseq = int(len(neg_seqs_ids)/lowest_denom)
-        #     min_batch_size = pspan + pseq + nseq
-        #     seq_datasets["posi_train"] = seq_datasets["train"].select(posi_seqs_ids)
-        #     seq_datasets["neg_train"] = seq_datasets["train"].select(neg_seqs_ids)
-        #     del(seq_datasets["train"])
-        #     logger.info(f"Minimum batch size needed: {min_batch_size} ;   pspan:pseq:nseq ratio {pspan}:{pseq}:{nseq}")
+    # Loading dataset from a predefined list and format.
+    span_datasets, seq_datasets, stats = load_cre_dataset(
+        args.dataset_name, args.do_train_val, 
+        span_augment=args.span_augment,
+        span_files=span_files, 
+        seq_files=seq_files,
+        do_train=args.do_train)
+    min_batch_size, pspan, apair, aseq = stats
+    logger.info(f"Minimum batch size needed: {min_batch_size} ;   pspan:apair:aseq ratio {pspan}:{apair}:{aseq}")
+    if args.ratio is not None:
+        pspan, apair, aseq = args.ratio
+        pspan, apair, aseq = int(pspan), int(apair), int(aseq)
+        min_batch_size = apair + aseq + pspan
+        logger.info(f"OVERWRITE Minimum batch size needed: {min_batch_size} ;   pspan:apair:aseq ratio {pspan}:{apair}:{aseq}")
 
     # Trim a number of training examples
     if args.debug:
@@ -666,17 +624,27 @@ def main():
 
         y = dataset[seq_label_column_name]
         class_count=dict(Counter(y))
-        class_count=np.array(list(class_count.values()))
-        weight=1./class_count
-        samples_weight = np.array([weight[t] for t in y])
-        samples_weight=torch.from_numpy(samples_weight)
 
-        sampler = WeightedRandomSampler(
-            weights=samples_weight, 
-            num_samples=batch_size,
-            replacement=True
-            )
+        if len(class_count)<=1:
+            # Sample randomly
+            sampler = RandomSampler(
+                data_source=dataset, 
+                num_samples=batch_size,
+                replacement=True
+                )
+        else:
+            # Sample by Class Labels randomly
+            class_count=np.array(list(class_count.values()))
+            weight=1./class_count
+            samples_weight = np.array([weight[t] for t in y])
+            samples_weight=torch.from_numpy(samples_weight)
+            sampler = WeightedRandomSampler(
+                weights=samples_weight, 
+                num_samples=batch_size,
+                replacement=True
+                )
         logger.info(f'Prepared sampler: {sampler}')
+
         return sampler
 
 

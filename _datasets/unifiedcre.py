@@ -10,7 +10,7 @@ from datasets import Features, Value, ClassLabel
 
 # Currently available datasets
 data_dir = "/home/fiona/CausalTM/src/data"
-available_datasets = ['altlex', 'because', 'ctb', 'esl', 'esl2', 'pdtb', 'semeval2010t8']
+available_datasets = ['altlex', 'because', 'ctb', 'esl', 'esl2', 'pdtb', 'semeval2010t8', 'cnc']
 
 # Test and Dev splits by doc_id. The ones not mentioned are for Train.
 # Dev is used for Testing by Default.
@@ -39,7 +39,11 @@ splits = {
         },
     'semeval2010t8': {
         'test': ['test.json']
-        }
+        },
+    'cnc': {
+        'test': ['train_10_(.)+'], # amended for current release
+        # 'test': ['test(.)+']
+    }
 }
 
 # Tasks that the dataset supports. We might not have access to all mentioned.
@@ -70,6 +74,11 @@ ft2 = {
 }
 
 
+def clean_tok(tok):
+    # Remove all other tags: E.g. <SIG0>, <SIG1>...
+    return re.sub('</*[A-Z]+\d*>','',tok) 
+
+
 def get_BIO(text_w_pairs):
     tokens = []
     ce_tags = []
@@ -94,7 +103,7 @@ def get_BIO(text_w_pairs):
             tag = 'I-E'
             next_tag = '_'
 
-        tokens.append(tok)
+        tokens.append(clean_tok(tok))
         ce_tags.append(tag)
         tag = next_tag
     
@@ -147,7 +156,7 @@ def load_span_dataset_ungrouped(dataset_name:list, do_train_val:bool):
         posi_span = {'corpus':[], 'index':[],'text':[],'label':[],'ce_tags':[]}
 
         for eg in span_dataset[s]:
-            if eg['seq_label']==1 and eg['pair_label']==1:
+            if eg['seq_label']==1 and eg['pair_label']==1 and eg['text_w_pairs'] is not None:
                 # positive spans
                 tokens, ce_tags = get_BIO(eg['text_w_pairs'])
                 mass_append(eg, posi_span, text_column=tokens, label_column_name='pair_label')
@@ -175,13 +184,14 @@ def load_cre_dataset(dataset_name:list, do_train_val:bool, \
     span_files:dict={}, seq_files:dict={}, do_train:bool=True):
     # Sanity checks
     datasets_for_span, datasets_for_others = [], []
-    for d in dataset_name:
-        if d not in available_datasets:
-            raise ValueError(f'"{d}" dataset is unavailable.')
-        if d in tasks['argument']:
-            datasets_for_span.append(d) # requires grouped sources
-        else:
-            datasets_for_others.append(d) # take as is
+    if dataset_name is not None:
+        for d in dataset_name:
+            if d not in available_datasets:
+                raise ValueError(f'"{d}" dataset is unavailable.')
+            if d in tasks['argument']:
+                datasets_for_span.append(d) # requires grouped sources
+            else:
+                datasets_for_others.append(d) # take as is
     
     # Process
     all_splits = []
@@ -237,7 +247,7 @@ def load_cre_dataset(dataset_name:list, do_train_val:bool, \
             for eg in span_dataset[s]:
                 if int(eg['seq_label'])==1 and int(eg['pair_label'])==1:
                     if eg['causal_text_w_pairs'] is None:
-                        if eg['corpus'] in tasks['pair_clf']:
+                        if eg['corpus'] in tasks['pair_clf'] and eg['text_w_pairs'] is not None:
                             mass_append(eg, pair, text_column_name='text_w_pairs', label_column_name='pair_label')
                         mass_append(eg, seq, text_column_name='text', label_column_name='seq_label')
                     else:
@@ -275,11 +285,13 @@ def load_cre_dataset(dataset_name:list, do_train_val:bool, \
                 elif int(eg['seq_label'])==0 and int(eg['pair_label'])==1:
                     raise ValueError('There should be no such examples. Preprocessing error!')
                 elif int(eg['seq_label'])==1 and int(eg['pair_label'])==0:
-                    if (eg['corpus'] in tasks['pair_clf']) or (eg['corpus'] not in available_datasets):
+                    if ((eg['corpus'] in tasks['pair_clf']) or (eg['corpus'] not in available_datasets)) and \
+                        (eg['text_w_pairs'] is not None):
                         mass_append(eg, pair, text_column_name='text_w_pairs', label_column_name='pair_label')
                 else: # i.e. eg['seq_label']==0 and eg['pair_label']==0:
                     # negative seqs
-                    if (eg['corpus'] in tasks['pair_clf']) or (eg['corpus'] not in available_datasets):
+                    if ((eg['corpus'] in tasks['pair_clf']) or (eg['corpus'] not in available_datasets)) and \
+                        (eg['text_w_pairs'] is not None):
                         mass_append(eg, pair, text_column_name='text_w_pairs', label_column_name='pair_label')
                     if int(eg['eg_id'])==0: # deduplication
                         mass_append(eg, seq, text_column_name='text', label_column_name='seq_label')
@@ -290,7 +302,8 @@ def load_cre_dataset(dataset_name:list, do_train_val:bool, \
             for eg in main_dataset[s]:
                 if eg['eg_id']==0: # deduplication
                     mass_append(eg, seq, text_column_name='text', label_column_name='seq_label')
-                if (eg['corpus'] in tasks['pair_clf']) or (eg['corpus'] not in available_datasets):
+                if ((eg['corpus'] in tasks['pair_clf']) or (eg['corpus'] not in available_datasets)) and \
+                    (eg['text_w_pairs'] is not None):
                     mass_append(eg, pair, text_column_name='text_w_pairs', label_column_name='pair_label')
 
             del(main_dataset[s])
