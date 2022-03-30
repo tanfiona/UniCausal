@@ -568,7 +568,7 @@ def main():
                 if l != ignore_ids:
                     true_p.append(label_list[p])
                     true_l.append(label_list[l])
-            if len(set(true_l))==1 and true_l[0]=='_': # all dummy values
+            if len(set(true_l))==1 and true_l[0]=='O': # all dummy values
                 # drop these examples, append empties for alignment to index
                 true_predictions.append([])
                 true_labels.append([])

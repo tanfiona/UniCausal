@@ -82,7 +82,7 @@ def clean_tok(tok):
 def get_BIO(text_w_pairs):
     tokens = []
     ce_tags = []
-    next_tag = tag = '_'
+    next_tag = tag = 'O'
     for tok in text_w_pairs.split(' '):
 
         # Replace if special
@@ -93,7 +93,7 @@ def get_BIO(text_w_pairs):
         elif '</ARG0>' in tok:
             tok = re.sub('</ARG0>','',tok)
             tag = 'I-C'
-            next_tag = '_'
+            next_tag = 'O'
         elif '<ARG1>' in tok:
             tok = re.sub('<ARG1>','',tok)
             tag = 'B-E'
@@ -101,7 +101,7 @@ def get_BIO(text_w_pairs):
         elif '</ARG1>' in tok:
             tok = re.sub('</ARG1>','',tok)
             tag = 'I-E'
-            next_tag = '_'
+            next_tag = 'O'
 
         tokens.append(clean_tok(tok))
         ce_tags.append(tag)

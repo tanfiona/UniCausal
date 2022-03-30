@@ -168,8 +168,8 @@ class BertForUnifiedCR(BertPreTrainedModel):
         #####
         
         if teacher_forcing and tok_label is not None:
-            # replace -100 to 0 ('_')
-            # please check that pad_label_idx=-100 and '_' is indeed represented by 0 in toklabel2id
+            # replace -100 to 0 ('O')
+            # please check that pad_label_idx=-100 and 'O' is indeed represented by 0 in toklabel2id
             pooled_output=self.pool(
                 nn.functional.one_hot(
                     torch.where(tok_label>=0, tok_label, 0),

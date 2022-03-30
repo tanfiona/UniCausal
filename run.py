@@ -423,7 +423,7 @@ def main():
     else: 
         # When not training, it is dangerous to let auto detection of label_to_id
         # the order can change, leading to wrong or missing predictions
-        label_to_id = {'B-C': 0, 'B-E': 1, 'I-C': 2, 'I-E': 3, '_': 4}
+        label_to_id = {'B-C': 0, 'B-E': 1, 'I-C': 2, 'I-E': 3, 'O': 4}
         label_list = list(label_to_id.keys())
 
     num_labels = len(label_list)
@@ -761,7 +761,7 @@ def main():
                 if l != ignore_ids:
                     true_p.append(label_list[p])
                     true_l.append(label_list[l])
-            if len(set(true_l))==1 and true_l[0]=='_' and remove_if_no_ce: # all dummy values
+            if len(set(true_l))==1 and true_l[0]=='O' and remove_if_no_ce: # all dummy values
                 # drop these examples, append empties for alignment to index
                 true_predictions.append([])
                 true_labels.append([])
