@@ -267,7 +267,7 @@ def load_cre_dataset(dataset_name:list, do_train_val:bool, \
                             if missing==0:
                                 pass # do nothing
                             elif missing==1  or missing==2:
-                                ce_tags = ce_tags+[["_"]*len(ce_tags[0])]*missing
+                                ce_tags = ce_tags+[['O']*len(ce_tags[0])]*missing
                             elif missing<0:
                                 logging.debug(eg['causal_text_w_pairs'])
                                 logging.debug(ce_tags)
