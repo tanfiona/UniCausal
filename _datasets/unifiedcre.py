@@ -222,8 +222,6 @@ def load_cre_dataset(dataset_name:list, do_train_val:bool, \
     if len(seq_files)>0:
         for k,v in seq_files.items():
             data_files[k].append(v)
-    else:
-        data_files = {}
     if len(data_files)>0:
         logging.debug(f'Files for main_dataset: {data_files}')
         main_dataset = load_dataset('csv', data_files=data_files, features=Features(ft))
@@ -234,8 +232,8 @@ def load_cre_dataset(dataset_name:list, do_train_val:bool, \
     dataset = DatasetDict()
     sdataset = DatasetDict()
 
-    logging.debug(span_dataset)
-    logging.debug(main_dataset)
+    logging.debug(f"span_dataset: {span_dataset}")
+    logging.debug(f"main_dataset: {main_dataset}")
 
     for s in set(all_splits): # train, validation
 
