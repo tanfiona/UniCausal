@@ -575,31 +575,35 @@ def main():
     if args.do_train:
         # Log a few random samples from the training set:
         tmp_dataset = processed_span_datasets["span_train"]
-        for index in random.sample(range(len(tmp_dataset)), 3):
-            logger.info(f"Sample {index} of the SPAN training set: {tmp_dataset[index]}.")
-            eg = span_datasets["span_train"][index]
-            logger.info(f"Original form: {eg}.")
+        if len(tmp_dataset)>0:
+            for index in random.sample(range(len(tmp_dataset)), 3):
+                logger.info(f"Sample {index} of the SPAN training set: {tmp_dataset[index]}.")
+                eg = span_datasets["span_train"][index]
+                logger.info(f"Original form: {eg}.")
         
         tmp_dataset = processed_seq_datasets["seq_train"]
-        for index in random.sample(range(len(tmp_dataset)), 3):
-            logger.info(f"Sample {index} of the SEQ training set: {tmp_dataset[index]}.")
-            eg = seq_datasets["seq_train"][index]
-            logger.info(f"Original form: {eg}.")
+        if len(tmp_dataset)>0:
+            for index in random.sample(range(len(tmp_dataset)), 3):
+                logger.info(f"Sample {index} of the SEQ training set: {tmp_dataset[index]}.")
+                eg = seq_datasets["seq_train"][index]
+                logger.info(f"Original form: {eg}.")
 
         tmp_dataset = processed_seq_datasets["pair_train"]
-        for index in random.sample(range(len(tmp_dataset)), 3):
-            logger.info(f"Sample {index} of the PAIR training set: {tmp_dataset[index]}.")
-            eg = seq_datasets["pair_train"][index]
-            logger.info(f"Original form: {eg}.")
+        if len(tmp_dataset)>0:
+            for index in random.sample(range(len(tmp_dataset)), 3):
+                logger.info(f"Sample {index} of the PAIR training set: {tmp_dataset[index]}.")
+                eg = seq_datasets["pair_train"][index]
+                logger.info(f"Original form: {eg}.")
 
     if args.do_eval:
         print(processed_span_datasets)
         print(processed_seq_datasets)
         tmp_dataset = processed_span_datasets["span_validation"]
-        for index in random.sample(range(len(tmp_dataset)), 2):
-            logger.info(f"Sample {index} of the SPAN validation set: {tmp_dataset[index]}.")
-            eg = span_datasets["span_validation"][index]
-            logger.info(f"Original form: {eg}.")
+        if len(tmp_dataset)>0:
+            for index in random.sample(range(len(tmp_dataset)), 2):
+                logger.info(f"Sample {index} of the SPAN validation set: {tmp_dataset[index]}.")
+                eg = span_datasets["span_validation"][index]
+                logger.info(f"Original form: {eg}.")
 
     for k,v in span_datasets.items():
         logger.info(f"{k}, n={len(v)}")
