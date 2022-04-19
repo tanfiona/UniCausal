@@ -241,10 +241,10 @@ def parse_args():
     else:
         if args.span_train_file is not None:
             extension = args.span_train_file.split(".")[-1]
-            assert extension in ["json"], "`span_train_file` should be a json file."
+            assert extension in ["csv"], "`span_train_file` should be a CSV file."
         if args.span_val_file is not None:
             extension = args.span_val_file.split(".")[-1]
-            assert extension in ["json"], "`span_val_file` should be a json file."
+            assert extension in ["csv"], "`span_val_file` should be a CSV file."
 
     if args.push_to_hub:
         assert args.output_dir is not None, "Need an `output_dir` to create a repo when `--push_to_hub` is passed."
