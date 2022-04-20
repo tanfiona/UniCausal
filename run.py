@@ -370,7 +370,7 @@ def main():
     # Loading dataset from a predefined list and format.
     span_datasets, seq_datasets, stats = load_cre_dataset(
         args.dataset_name, args.do_train_val,
-        also_add_span_sequence_into_seq=True,
+        also_add_span_sequence_into_seq=False, # since we alr have span_datasets, which are read as label=1 later
         span_augment=args.span_augment,
         span_files=span_files, 
         seq_files=seq_files,
@@ -386,24 +386,27 @@ def main():
 
     for k,v in span_datasets.items():
         logger.info(f"{k}, n={len(v)}")
-    counts = {k:{'train':{0:0,1:0},'validation':{0:0,1:0}} for k in available_datasets}
-    for s in ['train','validation']:
-        for dp in span_datasets[f'span_{s}']:
-            counts[dp['corpus']][s][dp['label']]+=1
-    logger.info(counts)
+    if args.do_train and args.do_eval and args.do_train_val: # extra info
+        counts = {k:{'train':{0:0,1:0},'validation':{0:0,1:0}} for k in available_datasets}
+        for s in ['train','validation']:
+            for dp in span_datasets[f'span_{s}']:
+                counts[dp['corpus']][s][dp['label']]+=1
+        logger.info(counts)
 
     for k,v in seq_datasets.items():
         logger.info(f"{k}, n={len(v)}")
-    counts = {k:{'train':{0:0,1:0},'validation':{0:0,1:0}} for k in available_datasets}
-    for s in ['train','validation']:
-        for dp in seq_datasets[f'seq_{s}']:
-            counts[dp['corpus']][s][dp['label']]+=1
-    logger.info(counts)
-    counts = {k:{'train':{0:0,1:0},'validation':{0:0,1:0}} for k in available_datasets}
-    for s in ['train','validation']:
-        for dp in seq_datasets[f'pair_{s}']:
-            counts[dp['corpus']][s][dp['label']]+=1
-    logger.info(counts)
+    if args.do_train and args.do_eval and args.do_train_val: # extra info
+        counts = {k:{'train':{0:0,1:0},'validation':{0:0,1:0}} for k in available_datasets}
+        for s in ['train','validation']:
+            for dp in seq_datasets[f'seq_{s}']:
+                counts[dp['corpus']][s][dp['label']]+=1
+        logger.info(counts)
+    
+        counts = {k:{'train':{0:0,1:0},'validation':{0:0,1:0}} for k in available_datasets}
+        for s in ['train','validation']:
+            for dp in seq_datasets[f'pair_{s}']:
+                counts[dp['corpus']][s][dp['label']]+=1
+        logger.info(counts)
     
     # Trim a number of training examples
     if args.debug:
