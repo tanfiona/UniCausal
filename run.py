@@ -369,11 +369,13 @@ def main():
 
     # Loading dataset from a predefined list and format.
     span_datasets, seq_datasets, stats = load_cre_dataset(
-        args.dataset_name, args.do_train_val, 
+        args.dataset_name, args.do_train_val,
+        also_add_span_sequence_into_seq=True,
         span_augment=args.span_augment,
         span_files=span_files, 
         seq_files=seq_files,
-        do_train=args.do_train)
+        do_train=args.do_train
+        )
     min_batch_size, pspan, apair, aseq = stats
     logger.info(f"Minimum batch size needed: {min_batch_size} ;   pspan:apair:aseq ratio {pspan}:{apair}:{aseq}")
     if args.ratio is not None:
@@ -382,10 +384,31 @@ def main():
         min_batch_size = apair + aseq + pspan
         logger.info(f"OVERWRITE Minimum batch size needed: {min_batch_size} ;   pspan:apair:aseq ratio {pspan}:{apair}:{aseq}")
 
+    for k,v in span_datasets.items():
+        logger.info(f"{k}, n={len(v)}")
+    counts = {k:{'train':{0:0,1:0},'validation':{0:0,1:0}} for k in available_datasets}
+    for s in ['train','validation']:
+        for dp in span_datasets[f'span_{s}']:
+            counts[dp['corpus']][s][dp['label']]+=1
+    logger.info(counts)
+
+    for k,v in seq_datasets.items():
+        logger.info(f"{k}, n={len(v)}")
+    counts = {k:{'train':{0:0,1:0},'validation':{0:0,1:0}} for k in available_datasets}
+    for s in ['train','validation']:
+        for dp in seq_datasets[f'seq_{s}']:
+            counts[dp['corpus']][s][dp['label']]+=1
+    logger.info(counts)
+    counts = {k:{'train':{0:0,1:0},'validation':{0:0,1:0}} for k in available_datasets}
+    for s in ['train','validation']:
+        for dp in seq_datasets[f'pair_{s}']:
+            counts[dp['corpus']][s][dp['label']]+=1
+    logger.info(counts)
+    
     # Trim a number of training examples
     if args.debug:
         for s in span_datasets.keys():
-            span_datasets[s] = span_datasets[s].select(range(min(100,len(span_datasets[S]))))
+            span_datasets[s] = span_datasets[s].select(range(min(100,len(span_datasets[s]))))
         print(span_datasets)
         for s in seq_datasets.keys():
             seq_datasets[s] = seq_datasets[s].select(range(min(100,len(seq_datasets[s]))))
@@ -605,11 +628,6 @@ def main():
                 eg = span_datasets["span_validation"][index]
                 logger.info(f"Original form: {eg}.")
 
-    for k,v in span_datasets.items():
-        logger.info(f"{k}, n={len(v)}")
-    for k,v in seq_datasets.items():
-        logger.info(f"{k}, n={len(v)}")
-    
     # DataLoaders creation:
     if args.pad_to_max_length:
         # If padding was already done ot max length, we use the default data collator that will just convert everything

@@ -128,7 +128,10 @@ def get_data_files_dict(list_of_dataset_names:list, ddir:str, do_train_val:bool)
     for d in list_of_dataset_names:
         data_files['train'].append(os.path.join(ddir,f'{d}_train.csv'))
         if 'dev' in splits[d].keys():
-            data_files['train'].append(os.path.join(ddir,f'{d}_dev.csv'))
+            if do_train_val:
+                data_files['validation'].append(os.path.join(ddir,f'{d}_dev.csv'))
+            else:
+                data_files['train'].append(os.path.join(ddir,f'{d}_dev.csv'))
         if do_train_val:
             data_files['validation'].append(os.path.join(ddir,f'{d}_test.csv'))
         else:
