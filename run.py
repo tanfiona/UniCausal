@@ -907,11 +907,11 @@ def main():
                         labels=batch[span_label_column_name]
                         )
                     preds1, refs1 = format(
-                        predictions=outputs.tok_logits.argmax(dim=-1), 
+                        predictions=outputs.tok_logits1.argmax(dim=-1), 
                         labels=batch[f"{span_label_column_name}1"]
                         )
                     preds2, refs2 = format(
-                        predictions=outputs.tok_logits.argmax(dim=-1), 
+                        predictions=outputs.tok_logits2.argmax(dim=-1), 
                         labels=batch[f"{span_label_column_name}2"]
                         )
                     
@@ -1066,12 +1066,12 @@ def main():
                 remove_if_no_ce=False
                 )
             preds1, refs1 = format(
-                predictions=outputs.tok_logits.argmax(dim=-1), 
+                predictions=outputs.tok_logits1.argmax(dim=-1), 
                 labels=batch[f"{span_label_column_name}1"],
                 remove_if_no_ce=False
                 )
             preds2, refs2 = format(
-                predictions=outputs.tok_logits.argmax(dim=-1), 
+                predictions=outputs.tok_logits2.argmax(dim=-1), 
                 labels=batch[f"{span_label_column_name}2"],
                 remove_if_no_ce=False
                 )
@@ -1195,7 +1195,7 @@ def main():
         eval_pspan_index_col = span_datasets["span_validation"]["index"]
         eval_aseq_index_col = eval_pspan_index_col+seq_datasets["seq_validation"]["index"]
         eval_apair_index_col = seq_datasets["pair_validation"]["index"]
-        eval_pspan_index_col = list(eval_pspan_index_col)*3
+        eval_pspan_index_col = list(eval_pspan_index_col)*3 # to fix index_list
 
         assert(len(all_preds)==len(all_refs))
         assert(len(eval_pspan_index_col)==len(all_preds))
