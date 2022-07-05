@@ -560,7 +560,7 @@ def main():
             y_true = references.detach().cpu().clone().numpy()
 
         # Remove ignored index (special tokens)
-        # Remove if all are "_" (dummy examples)
+        # Remove if all are 'O' (dummy examples)
         true_predictions, true_labels = [], []
         for pred, gold_label in zip(y_pred, y_true):
             true_p, true_l = [], []

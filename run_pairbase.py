@@ -13,6 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+Fine-tuning a 🤗 Transformers model on token classification tasks (NER, POS, CHUNKS) relying on the accelerate library
+without using a Trainer.
+Source: https://github.com/huggingface/transformers/blob/master/examples/pytorch/token-classification/run_ner_no_trainer.py
+"""
 
 import argparse
 import logging
@@ -301,11 +306,19 @@ def main():
             os.makedirs(args.output_dir, exist_ok=True)
     accelerator.wait_for_everyone()
 
+    seq_files = {}
+    if args.pair_train_file is not None and args.do_train:
+        seq_files["train"] = args.pair_train_file
+    if args.pair_val_file is not None and (args.do_eval or args.do_predict):
+        seq_files["validation"] = args.pair_val_file
+
     if args.dataset_name is not None:
         # Loading dataset from a predefined list and format.
         span_datasets, seq_datasets, stats = load_cre_dataset(
             args.dataset_name, args.do_train_val, 
-            also_add_span_sequence_into_seq=True
+            also_add_span_sequence_into_seq=True,
+            seq_files=seq_files,
+            do_train=args.do_train
             )
     else:
         # These do not work given current changes
@@ -322,12 +335,9 @@ def main():
     seq_label_column_name = "label"
     num_labels=2
 
-    if args.pair_train_file is not None or args.dataset_name is not None:
-        seq_structure_source = 'pair_train'
-    elif args.pair_val_file is not None:
-        seq_structure_source = 'pair_validation'
-    else:
-        raise ValueError('We do not have any seq train or validation datasets to work with.')
+    seq_structure_source = list(seq_datasets.keys())[0]
+    logging.info('Using auto detected data source for column and data structures: '+\
+        f'"{seq_structure_source}"')
  
     # Load pretrained model and tokenizer
     tokenizer_name_or_path = args.tokenizer_name if args.tokenizer_name else args.model_name_or_path

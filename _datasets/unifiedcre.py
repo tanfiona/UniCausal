@@ -10,7 +10,10 @@ from datasets import Features, Value, ClassLabel
 
 # Currently available datasets
 data_dir = "/home/fiona/CausalTM/src/data"
-available_datasets = ['altlex', 'because', 'ctb', 'esl', 'esl2', 'pdtb', 'semeval2010t8', 'cnc']
+available_datasets = [
+    'altlex','because','ctb','esl','esl2','pdtb',
+    'semeval2010t8','cnc','causenet','causenetm'
+    ]
 
 # Test and Dev splits by doc_id. The ones not mentioned are for Train.
 # Dev is used for Testing by Default.
@@ -21,12 +24,12 @@ splits = {
         },
     'because': {
         'test': ['Article247_327.ann','wsj_22(.)+','wsj_23(.)+','wsj_00(.)+','wsj_01(.)+','wsj_24(.)+']
-        }, #10% random doc
+        }, #10% random doc & follow PDTB
     'ctb': {
         'test': ['ea980120.1830.0456.tml','APW19980227.0494.tml','PRI19980306.2000.1675.tml',
         'APW19980213.1320.tml','APW19980501.0480.tml', 'PRI19980205.2000.1998.tml',
         'wsj_22(.)+','wsj_23(.)+','wsj_00(.)+','wsj_01(.)+','wsj_24(.)+']
-        }, #10% random doc
+        }, #10% random doc & follow PDTB
     'esl': {
         'test': ['37_(.)+','41_(.)+']
         },
@@ -41,16 +44,23 @@ splits = {
         'test': ['test.json']
         },
     'cnc': {
-        'test': ['train_10_(.)+'], # amended for current release
-        # 'test': ['test(.)+']
+        'dev': ['train_10_(.)+'],
+        'test': ['test(.)+']
+    },
+    'causenet': {
+        'test': [] # under 'causenet-test-doc_id.txt'
+    },
+    'causenetm': {
+        'dev': ['dev(.)+'],
+        'test': ['test(.)+']
     }
 }
 
 # Tasks that the dataset supports. We might not have access to all mentioned.
 # All examples should be eligible for seq_clf: given text, clf causal [requires deduplication]
 tasks = {
-    'argument': ['pdtb','cnc','altlex','because','fincausal2021'], # find causal spans [requires grouping]
-    'pair_clf': ['semeval2010t8','ctb','pdtb','cnc','altlex','because'], # given pair, clf causal [as is]
+    'argument': ['pdtb','cnc','altlex','because','fincausal2021','causenetm'], # find causal spans [requires grouping]
+    'pair_clf': ['semeval2010t8','ctb','pdtb','cnc','altlex','because','causenet','causenetm'], # given pair, clf causal [as is]
 }
 
 # For all datasets
@@ -159,13 +169,13 @@ def load_span_dataset_ungrouped(dataset_name:list, do_train_val:bool):
         posi_span = {'corpus':[], 'index':[],'text':[],'label':[],'ce_tags':[]}
 
         for eg in span_dataset[s]:
-            if eg['seq_label']==1 and eg['pair_label']==1 and eg['text_w_pairs'] is not None:
+            if int(eg['seq_label'])==1 and int(eg['pair_label'])==1 and eg['text_w_pairs'] is not None:
                 # positive spans
                 tokens, ce_tags = get_BIO(eg['text_w_pairs'])
                 mass_append(eg, posi_span, text_column=tokens, label_column_name='pair_label')
                 posi_span[f'ce_tags'].append(ce_tags)
             else:
-                # we ignore not-causal examples
+                # we ignore not-causal examples, or examples with no pair annotations
                 # model tends to perform worse having to decipher negative from positive examples 
                 # while doing span detection
                 pass
@@ -195,7 +205,9 @@ def load_cre_dataset(dataset_name:list, do_train_val:bool, \
                 datasets_for_span.append(d) # requires grouped sources
             else:
                 datasets_for_others.append(d) # take as is
-    
+    logging.debug(f'Files for all three tasks: {datasets_for_span}')
+    logging.debug(f'Files for non-span det tasks: {datasets_for_others}')
+
     # Process
     all_splits = []
     if len(datasets_for_span)>0:
@@ -310,9 +322,6 @@ def load_cre_dataset(dataset_name:list, do_train_val:bool, \
             del(main_dataset[s])
 
         # Add to dataset
-        logging.debug(seq)
-        logging.debug(pair)
-        logging.debug(posi_span)
         dataset[f'seq_{s}'] = Dataset.from_dict(seq)
         dataset[f'pair_{s}'] = Dataset.from_dict(pair)
         sdataset[f'span_{s}'] = Dataset.from_dict(posi_span)

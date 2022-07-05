@@ -55,11 +55,11 @@ def save_list(data:list, txt_file_path:str):
             f.write(str(s) +"\n")
 
 
-def open_list(txt_file_path:str):
+def open_list(txt_file_path:str, typ:type=int):
     items = []
     with open(txt_file_path, "r") as f:
         for line in f:
-            items.append(int(line.strip()))
+            items.append(typ(line.strip()))
     return items
 
 
