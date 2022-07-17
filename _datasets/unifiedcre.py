@@ -9,7 +9,7 @@ from datasets import Features, Value, ClassLabel
 
 
 # Currently available datasets
-data_dir = "/home/fiona/CausalTM/src/data"
+data_dir = "data"
 available_datasets = [
     'altlex','because','ctb','esl','esl2','pdtb',
     'semeval2010t8','cnc','causenet','causenetm'
