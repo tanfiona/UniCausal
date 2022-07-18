@@ -149,7 +149,7 @@ def get_data_files_dict(list_of_dataset_names:list, ddir:str, do_train_val:bool)
     return dict(data_files)
 
 
-def load_span_dataset_ungrouped(dataset_name:list, do_train_val:bool):
+def load_span_dataset_ungrouped(dataset_name:list, do_train_val:bool, data_dir:str=data_dir):
     # Sanity checks
     datasets_for_span = []
     for d in dataset_name:
@@ -194,7 +194,7 @@ def get_args(text_w_pairs):
 
 def load_cre_dataset(dataset_name:list, do_train_val:bool, \
     also_add_span_sequence_into_seq:bool=False, span_augment:bool=False,
-    span_files:dict={}, seq_files:dict={}, do_train:bool=True):
+    span_files:dict={}, seq_files:dict={}, do_train:bool=True, data_dir:str=data_dir):
     # Sanity checks
     datasets_for_span, datasets_for_others = [], []
     if dataset_name is not None:
