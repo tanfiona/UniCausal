@@ -66,7 +66,7 @@ We adapted the Huggingface Sequence Classification and Token Classification scri
 
 <br>
 
-### Pretrained Model
+### Pretrained Models
 
 We uploaded our `bert-base-cased` model adapted onto all datasets per task onto Huggingface Hub. Users who wish to plug and play can do so by calling the following pretrained model names directly:
 
@@ -76,7 +76,7 @@ We uploaded our `bert-base-cased` model adapted onto all datasets per task onto 
 
 You may also play around with the Hosted Inference API on Huggingface Hub to directly try your own input sentences without any coding!
 
-| <img align="center" height=200 src="assets/SeqClf_Causal.PNG"> <img align="center" height=200 src="assets/SeqClf_Noncausal.PNG"> |
+| <img align="center" height=250 src="assets/SeqClf_Causal.PNG">    <img align="center" height=250 src="assets/SeqClf_Noncausal.PNG"> |
 |:--:| 
 | *Sequence Classification, where LABEL_1=Causal and LABEL_0=Non-causal, using Hosted Inference API on Hugginface. [Try it yourself!](https://huggingface.co/tanfiona/unicausal-seq-baseline?text=He+is+Billy+and+he+pushed+her.)* |
 
