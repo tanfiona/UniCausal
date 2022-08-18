@@ -33,6 +33,8 @@ For more details and analysis, please refer to our [corresponding paper titled "
 ### Set Up
 Create virtual environment and download dependencies based on [`requirements.txt`](requirements.txt). If using `conda`, you may install the packages using [`extended_requirements.txt`](extended_requirements.txt).
 
+<br>
+
 ### Dataset Loading
 A key novelty of our framework is that once users download our repository, they can directly "call" the datasets to design Causal Text Mining models. 
 
@@ -49,19 +51,30 @@ print('List of available datasets:', available_datasets)
 """
 load_cre_dataset(dataset_name=['altlex','because'], do_train_val=True, data_dir='../data')
 ```
+<br>
 
 ### Training & Testing
 
 We adapted the Huggingface Sequence Classification and Token Classification scripts to create baselines per task. The codes are available as follows:
 
-(I) `run_seqbase.py`: Sequence Classification <br>
-(II) `run_tokbase.py`: Token Classification a.k.a. Cause-Effect Span Detection <br>
-(III) `run_pairbase.py`: Pair Classification <br>
-
-<br>
+(I) [`run_seqbase.py`](run_seqbase.py): Sequence Classification <br>
+(II) [`run_tokbase.py`](run_tokbase.py): Token Classification a.k.a. Cause-Effect Span Detection <br>
+(III) [`run_pairbase.py`](run_pairbase.py): Pair Classification <br>
 
 
 <img align="center" height=400 src="assets/Table3_BenchmarkScores.PNG">
+
+<br>
+
+### Pretrained Model
+
+We uploaded our `bert-base-cased` model adapted onto all datasets per task onto Huggingface Hub. Users who wish to plug and play can do so by calling the following pretrained model names directly:
+
+(I) [`tanfiona/unicausal-seq-baseline`](https://huggingface.co/tanfiona/unicausal-seq-baseline): Sequence Classification <br>
+(II) [`tanfiona/unicausal-tok-baseline`](https://huggingface.co/tanfiona/unicausal-tok-baseline): Token Classification a.k.a. Cause-Effect Span Detection <br>
+(III) [`tanfiona/unicausal-pair-baseline`](https://huggingface.co/tanfiona/unicausal-pair-baseline): Pair Classification <br>
+
+You may also play around with the Hosted Inference API on Huggingface Hub and try your own input sentences!
 
 <br>
 
