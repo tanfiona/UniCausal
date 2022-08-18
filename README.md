@@ -74,7 +74,11 @@ We uploaded our `bert-base-cased` model adapted onto all datasets per task onto 
 (II) [`tanfiona/unicausal-tok-baseline`](https://huggingface.co/tanfiona/unicausal-tok-baseline): Token Classification a.k.a. Cause-Effect Span Detection <br>
 (III) [`tanfiona/unicausal-pair-baseline`](https://huggingface.co/tanfiona/unicausal-pair-baseline): Pair Classification <br>
 
-You may also play around with the Hosted Inference API on Huggingface Hub and try your own input sentences!
+You may also play around with the Hosted Inference API on Huggingface Hub to directly try your own input sentences without any coding!
+
+| <img align="center" height=200 src="assets/SeqClf_Causal.PNG"> <img align="center" height=200 src="assets/SeqClf_Noncausal.PNG"> |
+|:--:| 
+| *Sequence Classification, where LABEL_1=Causal and LABEL_0=Non-causal, using Hosted Inference API on Hugginface. [Try it yourself!](https://huggingface.co/tanfiona/unicausal-seq-baseline?text=He+is+Billy+and+he+pushed+her.)* |
 
 <br>
 
