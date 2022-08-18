@@ -6,11 +6,11 @@ We introduce UniCausal, a unified benchmark and model for causal text mining acr
 ### Datasets included:
 The six datasets reflect a variety of sentence lengths, linguistic constructions, argument types, and more. 
 
-<img align="center" src="assets/Table1_DataDifferences.PNG">
+<img align="center" height=200 src="assets/Table1_DataDifferences.PNG">
 
 <br>
 
-<img align="center" height=250 src="assets/Table2_DataSizes.PNG">
+<img align="center" height=400 src="assets/Table2_DataSizes.PNG">
 
 <br>
 
@@ -20,7 +20,7 @@ The six datasets reflect a variety of sentence lengths, linguistic constructions
 (II) Cause-Effect Span Detection <br>
 (III) Pair Classification <br>
 
-<img align="center" height=250 src="assets/Figure1_Tasks.PNG">
+<img align="center" height=400 src="assets/Figure1_Tasks.PNG">
 
 <br>
 
@@ -63,4 +63,4 @@ If you used our repository or found it helpful in any way, please do cite us in 
 
 If you have feedback or features/datasets you would like to contribute, please email us at tan.f[at]u.nus.edu.
 
-[Current version: 1.0.0]
+<i>[Current version: 1.0.0]</i>
