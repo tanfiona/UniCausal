@@ -1,5 +1,5 @@
 # UniCausal
-Causality is an important part of human cognition. It is easy for humans to pick up explicit and implicit relations from conversations and text. Causal text mining annotation efforts have been sparse or inconsistent. 
+Causality is an important part of human cognition. It is easy for humans to pick up explicit and implicit relations from conversations and text. Causal Text Mining annotation efforts have been sparse or inconsistent. 
 
 We introduce UniCausal, a unified benchmark and model for causal text mining across six popular causal datasets and three common tasks. 
 
@@ -24,17 +24,44 @@ The six datasets reflect a variety of sentence lengths, linguistic constructions
 
 <br>
 
-For more details and analysis, please refer to our corresponding paper titled "UniCausal: Unified benchmark and model for causal text mining".
+For more details and analysis, please refer to our [corresponding paper titled "UniCausal: Unified benchmark and model for causal text mining"](To-be-added).
 
 <br>
 
 # Code
 
-### Individual Baselines
+### Set Up
+Create virtual environment and download dependencies based on [`requirements.txt`](requirements.txt). If using `conda`, you may install the packages using [`extended_requirements.txt`](extended_requirements.txt).
+
+### Dataset Loading
+A key novelty of our framework is that once users download our repository, they can directly "call" the datasets to design Causal Text Mining models. 
+
+We provide a tutorial to load datasets at [`tutorials/Loading_CTM_datasets.ipynb`](tutorials/Loading_CTM_datasets.ipynb). The main function to call is as follows:
+
+```
+from _datasets.unifiedcre import load_cre_dataset, available_datasets
+print('List of available datasets:', available_datasets)
+
+"""
+ Example case of loading AltLex and BECAUSE dataset,
+ without adding span texts to seq texts, span augmentation or user-provided datasets,
+ and load both training and validation datasets.
+"""
+load_cre_dataset(dataset_name=['altlex','because'], do_train_val=True, data_dir='../data')
+```
+
+### Training & Testing
+
+We adapted the Huggingface Sequence Classification and Token Classification scripts to create baselines per task. The codes are available as follows:
 
 (I) `run_seqbase.py`: Sequence Classification <br>
 (II) `run_tokbase.py`: Token Classification a.k.a. Cause-Effect Span Detection <br>
 (III) `run_pairbase.py`: Pair Classification <br>
+
+<br>
+
+
+<img align="center" height=400 src="assets/Table3_BenchmarkScores.PNG">
 
 <br>
 
