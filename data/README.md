@@ -25,8 +25,6 @@ Tips: You will need to de-duplicate the dataset by taking only the first "eg_id"
 ### (III) Pair Classification:
 Input column: "text_w_pairs", target_column: "pair_label".
 
-<br>
-
 ### (II) Span Detection
 Use datasets under the `grouped` folder instead. Since we are working with examples that have multiple causal relations per input text, we had to group the data such that unique texts have a single row instead of separate indexes for each relation. Namely, we group the data by "corpus, doc_id, sent_id" and keep the first "eg_id" (=0) as the main row. We then create two additional columns to reflect multiple causal relations, if available:
 * causal_text_w_pairs [list] : list of up to three causal target marked text that includes (`<ARG0>,<ARG1>,<SIGX>`) annotations. if no causal relation exists, an empty list is returned.
