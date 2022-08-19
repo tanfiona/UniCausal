@@ -236,7 +236,7 @@ def parse_args():
     args = parser.parse_args()
 
     # Sanity checks
-    if args.dataset_name is None and args.span_train_file is None and args.span_val_file:
+    if args.dataset_name is None and args.span_train_file is None and args.span_val_file is None:
         raise ValueError("Need either a dataset name or a training/validation file.")
     else:
         if args.span_train_file is not None:
@@ -315,11 +315,17 @@ def main():
     # See more about loading any type of standard or custom dataset (from files, python dict, pandas DataFrame, etc) at
     # https://huggingface.co/docs/datasets/loading_datasets.html.
 
-    if args.dataset_name is not None:
-        # Loading dataset from a predefined list and format.
-        span_datasets = load_span_dataset_ungrouped(args.dataset_name, args.do_train_val)
-    else:
-        raise NotImplementedError
+    span_files = {}
+    if args.span_train_file is not None and args.do_train:
+        span_files["train"] = args.span_train_file
+    if args.span_val_file is not None and (args.do_eval or args.do_predict):
+        span_files["validation"] = args.span_val_file
+
+    # Loading dataset from a predefined list and format.
+    span_datasets = load_span_dataset_ungrouped(
+        args.dataset_name, args.do_train_val,
+        span_files=span_files
+        )
     
     # Trim a number of training examples
     if args.debug:
@@ -349,15 +355,21 @@ def main():
         label_list.sort()
         return label_list
 
-    if hasattr(features[span_label_column_name], 'feature') and isinstance(features[span_label_column_name].feature, ClassLabel):
-        label_list = features[span_label_column_name].feature.names
-        # No need to convert the labels since they are already ints.
-        label_to_id = {i: i for i in range(len(label_list))}
-    else:
-        label_list = get_label_list(span_datasets[span_structure_source][span_label_column_name])
-        label_to_id = {l: i for i, l in enumerate(label_list)}
+    if args.do_train:
+        if hasattr(features[span_label_column_name], 'feature') and isinstance(features[span_label_column_name].feature, ClassLabel):
+            label_list = features[span_label_column_name].feature.names
+            # No need to convert the labels since they are already ints.
+            label_to_id = {i: i for i in range(len(label_list))}
+        else:
+            label_list = get_label_list(span_datasets[span_structure_source][span_label_column_name])
+            label_to_id = {l: i for i, l in enumerate(label_list)}
+    else: 
+        # When not training, it is dangerous to let auto detection of label_to_id
+        # the order can change, leading to wrong or missing predictions
+        label_to_id = {'B-C': 0, 'B-E': 1, 'I-C': 2, 'I-E': 3, 'O': 4}
+        label_list = list(label_to_id.keys())
+
     num_labels = len(label_list)
-    # id_to_label = {v:k for k,v in label_to_id.items()}
     logger.info(f"label_to_id: {label_to_id}")
 
     # Map that sends B-Xxx label to its I-Xxx counterpart
@@ -550,7 +562,7 @@ def main():
             num_training_steps=args.max_train_steps,
         )
 
-    def get_labels(predictions, references, ignore_ids=-100):
+    def get_labels(predictions, references, ignore_ids=-100, remove_if_no_ce=True):
         # Transform predictions and references tensors to numpy arrays
         if device.type == "cpu":
             y_pred = predictions.detach().clone().numpy()
@@ -568,7 +580,7 @@ def main():
                 if l != ignore_ids:
                     true_p.append(label_list[p])
                     true_l.append(label_list[l])
-            if len(set(true_l))==1 and true_l[0]=='O': # all dummy values
+            if len(set(true_l))==1 and true_l[0]=='O' and remove_if_no_ce: # all dummy values
                 # drop these examples, append empties for alignment to index
                 true_predictions.append([])
                 true_labels.append([])
@@ -601,13 +613,13 @@ def main():
 
     # Train & Evaluate
 
-    def format(predictions, labels):
+    def format(predictions, labels, remove_if_no_ce=True):
         if not args.pad_to_max_length:  # necessary to pad predictions and labels for being gathered
             predictions = accelerator.pad_across_processes(predictions, dim=1, pad_index=PADDING_DICT[span_label_column_name])
             labels = accelerator.pad_across_processes(labels, dim=1, pad_index=PADDING_DICT[span_label_column_name])
         predictions_gathered = accelerator.gather(predictions)
         labels_gathered = accelerator.gather(labels)
-        return get_labels(predictions_gathered, labels_gathered, PADDING_DICT[span_label_column_name])
+        return get_labels(predictions_gathered, labels_gathered, PADDING_DICT[span_label_column_name], remove_if_no_ce)
 
 
     if args.do_train:
@@ -723,7 +735,8 @@ def main():
             # Get Span Predictions & References
             preds, refs = format(
                 predictions=outputs.logits.argmax(dim=-1), 
-                labels=batch["labels"]
+                labels=batch["labels"],
+                remove_if_no_ce=False
                 )
             
             # Add to metrics

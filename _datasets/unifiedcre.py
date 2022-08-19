@@ -149,19 +149,35 @@ def get_data_files_dict(list_of_dataset_names:list, ddir:str, do_train_val:bool)
     return dict(data_files)
 
 
-def load_span_dataset_ungrouped(dataset_name:list, do_train_val:bool, data_dir:str=data_dir):
+def load_span_dataset_ungrouped(dataset_name:list, do_train_val:bool, span_files:dict={}, data_dir:str=data_dir):
     # Sanity checks
     datasets_for_span = []
-    for d in dataset_name:
-        if d not in available_datasets:
-            raise ValueError(f'"{d}" dataset is unavailable.')
-        if d in tasks['argument']:
-            datasets_for_span.append(d) # take as is
-        else:
-            logging.info(f'"{d}" dataset is ignored because it is unsuitable for span detection task.')
+    if dataset_name is not None:
+        for d in dataset_name:
+            if d not in available_datasets:
+                raise ValueError(f'"{d}" dataset is unavailable.')
+            if d in tasks['argument']:
+                datasets_for_span.append(d) # take as is
+            else:
+                logging.info(f'"{d}" dataset is ignored because it is unsuitable for span detection task.')
+    
     # Process
-    data_files = get_data_files_dict(datasets_for_span, os.path.join(data_dir,'splits'), do_train_val)
+    if len(datasets_for_span)>0:
+        data_files = get_data_files_dict(datasets_for_span, os.path.join(data_dir,'splits'), do_train_val)
+    else:
+        data_files = {'train':[],'validation':[]}
+    if len(span_files)>0:
+        for k,v in span_files.items():
+            data_files[k].append(v)
+    data_files2 = {}
+    for k,v in data_files.items():
+        if len(v)>0:
+            data_files2[k]=v
+    data_files = data_files2
+    del(data_files2)
+
     span_dataset = load_dataset('csv', data_files=data_files, features=Features(ft))
+
     sdataset = DatasetDict()
 
     for s in list(data_files.keys()): # train, validation
@@ -181,6 +197,9 @@ def load_span_dataset_ungrouped(dataset_name:list, do_train_val:bool, data_dir:s
                 pass
     
         sdataset[f'span_{s}'] = Dataset.from_dict(posi_span)
+
+    # print(sdataset)
+    # print(sdataset['span_validation'][0])
 
     return sdataset
 
