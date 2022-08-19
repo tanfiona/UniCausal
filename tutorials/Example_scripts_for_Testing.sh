@@ -11,7 +11,6 @@ _datasets/add_dummy_columns.py --input_csv_path data/test_subtask2_text.csv
 
 sudo CUDA_VISIBLE_DEVICES=1 /home/fiona/anaconda3/envs/torchgeom/bin/python3 \
 run_tokbase.py \
---suppress_test_eval \
 --span_val_file data/test_subtask2_text_formatted.csv --do_predict \
 --model_name_or_path tanfiona/unicausal-tok-baseline \
 --output_dir outs/causalnewscorpus_subtask2 \
