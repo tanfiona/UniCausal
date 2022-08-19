@@ -306,15 +306,18 @@ def main():
             os.makedirs(args.output_dir, exist_ok=True)
     accelerator.wait_for_everyone()
 
-    if args.dataset_name is not None:
-        # Loading dataset from a predefined list and format.
-        span_datasets, seq_datasets, stats = load_cre_dataset(
-            args.dataset_name, args.do_train_val, 
-            also_add_span_sequence_into_seq=True
-            )
-    else:
-        # These do not work given current changes
-        raise NotImplementedError
+    seq_files = {}
+    if args.seq_train_file is not None and args.do_train:
+        seq_files["train"] = args.seq_train_file
+    if args.seq_val_file is not None and (args.do_eval or args.do_predict):
+        seq_files["validation"] = args.seq_val_file
+    
+    span_datasets, seq_datasets, stats = load_cre_dataset(
+        args.dataset_name, args.do_train_val, 
+        also_add_span_sequence_into_seq=True,
+        seq_files=seq_files,
+        do_train=args.do_train
+        )
 
     # Trim a number of training examples
     if args.debug:
