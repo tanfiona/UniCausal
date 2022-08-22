@@ -86,7 +86,7 @@ You may also play around with the Hosted Inference API on Huggingface Hub to dir
 1. [AltLex](https://github.com/chridey/altlex) (Hidey and McKweon, 2016)
 2. [BECAUSE 2.0](https://github.com/duncanka/BECAUSE) (Duneitz et al., 2017)
 3. [CausalTimeBank (CTB)](https://github.com/paramitamirza/Causal-TimeBank) (Mirza et al., 2014; Mirza and Tonelli, 2014)
-4. [EventStoryLine V1.0 (ESL)](https://github.com/tommasoc80/EventStoryLine) \citep{caselli-vossen-2017-event}
+4. [EventStoryLine V1.0 (ESL)](https://github.com/tommasoc80/EventStoryLine) (Caselli and Vossen, 2017)
 5. [Penn Discourse Treebank V3.0 (PDTB)](https://catalog.ldc.upenn.edu/LDC2019T05) (Webber et al., 2019)
 6. [SemEval 2010 Task 8 (SemEval)](https://semeval2.fbk.eu/semeval2.php?location=tasks&taskid=11) (Hendrickx et al., 2010)
 
