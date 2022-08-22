@@ -1,7 +1,7 @@
 # UniCausal
 Causality is an important part of human cognition. It is easy for humans to pick up explicit and implicit relations from conversations and text. Causal Text Mining annotation efforts have been sparse or inconsistent. 
 
-We introduce UniCausal, a unified benchmark and model for causal text mining across six popular causal datasets and three common tasks. 
+We introduce [UniCausal, a unified benchmark and model for causal text mining](https://arxiv.org/pdf/2208.09163.pdf) across six popular causal datasets and three common tasks. 
 
 ### Datasets included:
 The six datasets reflect a variety of sentence lengths, linguistic constructions, argument types, and more. 
@@ -24,7 +24,7 @@ The six datasets reflect a variety of sentence lengths, linguistic constructions
 
 <br>
 
-For more details and analysis, please refer to our [corresponding paper titled "UniCausal: Unified benchmark and model for causal text mining"](To-be-added).
+For more details and analysis, please refer to our [corresponding paper titled "UniCausal: Unified benchmark and model for causal text mining"](https://arxiv.org/pdf/2208.09163.pdf).
 
 <br>
 
@@ -95,13 +95,15 @@ You may also play around with the Hosted Inference API on Huggingface Hub to dir
 # Cite Us
 If you used our repository or found it helpful in any way, please do cite us in your work:
 ```
-@misc{tan-etal-2022-unicausal,
-  author = {Tan, Fiona Anting and Zuo, Xinyu},
-  title = {The Causal News Corpus: Annotating Causal Relations in Event Sentences from News },
+@misc{https://doi.org/10.48550/arxiv.2208.09163,
+  doi = {10.48550/ARXIV.2208.09163},
+  url = {https://arxiv.org/abs/2208.09163},
+  author = {Tan, Fiona Anting and Zuo, Xinyu and Ng, See-Kiong},
+  keywords = {Computation and Language (cs.CL), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  title = {UniCausal: Unified Benchmark and Model for Causal Text Mining},
+  publisher = {arXiv},
   year = {2022},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/tanfiona/CausalNewsCorpus}}
+  copyright = {Creative Commons Attribution 4.0 International}
 }
 ```
 
