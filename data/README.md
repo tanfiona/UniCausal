@@ -32,4 +32,4 @@ Use datasets under the `grouped` folder instead. Since we are working with examp
 
 
 ## Paid Data
-PDTB and portions of BECAUSE is a paid resource. Therefore, we are unable to release them on Github even though we used them extensively for experiments. If you are interested to work with the full corpus, please send us an email and we can either send you the processing scripts or full processed data once we verify you do have the original paid resource access. Thank you for your understanding.
+PDTB and portions of BECAUSE are paid resources. Therefore, we are unable to release them on Github even though we used them extensively for experiments. If you are interested to work with the full corpus, please send us an email and we can either send you the processing scripts or full processed data once we verify you do have the original paid resource access. Thank you for your understanding.
