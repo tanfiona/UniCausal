@@ -16,7 +16,7 @@ You may find the processed datasets under the `splits` folder. These datasets ar
 * context [str] : not relevant for CNC that works on single-sentences, to be used for non-consecutive sentence pairs
 * num_sents [int] : number of sentences in text column
 
-## Guidelines per Task:
+## Guidelines per Task
 
 ### (I) Sequence Classification:
 Input column: "text", target column: "seq_label".
