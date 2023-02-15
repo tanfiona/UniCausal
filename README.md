@@ -1,7 +1,5 @@
 # UniCausal
-Causality is an important part of human cognition. It is easy for humans to pick up explicit and implicit relations from conversations and text. Causal Text Mining annotation efforts have been sparse or inconsistent. 
-
-We introduce [UniCausal, a unified benchmark and model for causal text mining](https://arxiv.org/pdf/2208.09163.pdf) across six popular causal datasets and three common tasks. 
+Current causal text mining datasets vary in objectives, data coverage, and annotation schemes. These inconsistent efforts prevented modeling capabilities and fair comparisons of model performance. Few datasets include cause-effect span annotations, which are needed for end-to-end causal relation extraction. Therefore, we introduce [UniCausal, a unified benchmark and model for causal text mining](https://arxiv.org/pdf/2208.09163.pdf), based on six popular causal datasets and three common tasks. 
 
 ### Datasets included:
 The six datasets reflect a variety of sentence lengths, linguistic constructions, argument types, and more. 
