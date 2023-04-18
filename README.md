@@ -93,15 +93,13 @@ You may also play around with the Hosted Inference API on Huggingface Hub to dir
 # Cite Us
 If you used our repository or found it helpful in any way, please do cite us in your work:
 ```
-@misc{https://doi.org/10.48550/arxiv.2208.09163,
-  doi = {10.48550/ARXIV.2208.09163},
-  url = {https://arxiv.org/abs/2208.09163},
-  author = {Tan, Fiona Anting and Zuo, Xinyu and Ng, See-Kiong},
-  keywords = {Computation and Language (cs.CL), FOS: Computer and information sciences, FOS: Computer and information sciences},
-  title = {UniCausal: Unified Benchmark and Model for Causal Text Mining},
-  publisher = {arXiv},
-  year = {2022},
-  copyright = {Creative Commons Attribution 4.0 International}
+@misc{tan2023unicausal,
+      title={UniCausal: Unified Benchmark and Repository for Causal Text Mining}, 
+      author={Fiona Anting Tan and Xinyu Zuo and See-Kiong Ng},
+      year={2023},
+      eprint={2208.09163},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
 }
 ```
 
