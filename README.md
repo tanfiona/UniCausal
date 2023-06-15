@@ -90,6 +90,17 @@ You may also play around with the Hosted Inference API on Huggingface Hub to dir
 
 <br>
 
+# License & Usage
+
+Our codes follow the [GNU GPL License](LICENSE). For the data, you must refer to individual datasets’ licenses. The following datasets had publicly available licenses:
+
+2. [BECAUSE 2.0: MIT License](https://github.com/duncanka/BECAUSE/blob/master/LICENSE)
+4.	[EventStoryLine V1.0: CC License](https://github.com/tommasoc80/EventStoryLine/blob/master/LICENSE.md)
+5. [Penn Discourse Treebank V3.0: LDC User Agreement for Non-Members](https://catalog.ldc.upenn.edu/LDC2019T05)
+
+Unfortunately, we were unable to find licensing information for AltLex, CausalTimeBank and SemEval 2010 Task 8. If you manage to find them, kindly inform us.
+
+
 # Cite Us
 If you used our repository or found it helpful in any way, please do cite us in your work:
 
