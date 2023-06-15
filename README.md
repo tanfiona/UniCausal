@@ -92,14 +92,16 @@ You may also play around with the Hosted Inference API on Huggingface Hub to dir
 
 # Cite Us
 If you used our repository or found it helpful in any way, please do cite us in your work:
+
 ```
-@misc{tan2023unicausal,
-      title={UniCausal: Unified Benchmark and Repository for Causal Text Mining}, 
-      author={Fiona Anting Tan and Xinyu Zuo and See-Kiong Ng},
-      year={2023},
-      eprint={2208.09163},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@InProceedings{tan-etal-2023-unicausal,
+ author="Tan, Fiona Anting
+ and Zuo, Xinyu
+ and Ng, See-Kiong",
+ title="UniCausal: Unified Benchmark and Repository for Causal Text Mining",
+ booktitle="Big Data Analytics and Knowledge Discovery",
+ year="2023",
+ publisher="Springer International Publishing",
 }
 ```
 
