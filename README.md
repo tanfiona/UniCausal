@@ -1,5 +1,5 @@
 # UniCausal
-Current causal text mining datasets vary in objectives, data coverage, and annotation schemes. These inconsistent efforts prevented modeling capabilities and fair comparisons of model performance. Few datasets include cause-effect span annotations, which are needed for end-to-end causal relation extraction. Therefore, we introduce [UniCausal, a unified benchmark and model for causal text mining](https://arxiv.org/pdf/2208.09163.pdf), based on six popular causal datasets and three common tasks. 
+Current causal text mining datasets vary in objectives, data coverage, and annotation schemes. These inconsistent efforts prevented modeling capabilities and fair comparisons of model performance. Few datasets include cause-effect span annotations, which are needed for end-to-end causal relation extraction. Therefore, we introduce [UniCausal, a unified benchmark and model for causal text mining](https://link.springer.com/chapter/10.1007/978-3-031-39831-5_23), based on six popular causal datasets and three common tasks. 
 
 ### Datasets included:
 The six datasets reflect a variety of sentence lengths, linguistic constructions, argument types, and more. 
@@ -105,14 +105,28 @@ Unfortunately, we were unable to find licensing information for AltLex, CausalTi
 If you used our repository or found it helpful in any way, please do cite us in your work:
 
 ```
-@InProceedings{tan-etal-2023-unicausal,
- author="Tan, Fiona Anting
- and Zuo, Xinyu
- and Ng, See-Kiong",
- title="UniCausal: Unified Benchmark and Repository for Causal Text Mining",
- booktitle="Big Data Analytics and Knowledge Discovery",
- year="2023",
- publisher="Springer International Publishing",
+@inproceedings{DBLP:conf/dawak/TanZN23,
+  author       = {Fiona Anting Tan and
+                  Xinyu Zuo and
+                  See{-}Kiong Ng},
+  editor       = {Robert Wrembel and
+                  Johann Gamper and
+                  Gabriele Kotsis and
+                  A Min Tjoa and
+                  Ismail Khalil},
+  title        = {UniCausal: Unified Benchmark and Repository for Causal Text Mining},
+  booktitle    = {Big Data Analytics and Knowledge Discovery - 25th International Conference,
+                  DaWaK 2023, Penang, Malaysia, August 28-30, 2023, Proceedings},
+  series       = {Lecture Notes in Computer Science},
+  volume       = {14148},
+  pages        = {248--262},
+  publisher    = {Springer},
+  year         = {2023},
+  url          = {https://doi.org/10.1007/978-3-031-39831-5\_23},
+  doi          = {10.1007/978-3-031-39831-5\_23},
+  timestamp    = {Fri, 18 Aug 2023 08:45:01 +0200},
+  biburl       = {https://dblp.org/rec/conf/dawak/TanZN23.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 ```
 
